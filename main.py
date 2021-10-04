@@ -4,7 +4,7 @@ import re
 dictionary = ["как бы", "собственно", "таким образом", "буквально", "как говорится", "так далее", "скажем", "ведь",
               "как его", "в натуре", "так вот", "короче", "как сказать", "видишь", "слышишь", "типа", "итак",
               "на самом деле", "вообще", "в общем-то", "в общем", "в некотором роде", "в принципе", "типа того", "вот",
-              "как-бы", "ну"]
+              "как-бы", "ну", "то есть"]
 
 
 def get_len(coun, txt):
@@ -15,7 +15,7 @@ def get_len(coun, txt):
     return result
 
 
-def choose(text, txt, color):
+def choose(text, txt, color="white"):
     result = ""
     if "." in txt or "," in txt or "?" in txt or "!" in txt:
         result = colored(txt[:len(txt) - 1], color) + "."
@@ -44,6 +44,7 @@ def checker():
     hel = result.replace(" ", "_")
     hel = hel.split('_')
     flag = True
+    flagS = False
     file = open("output.txt", "w")
     for i in range(len(text)):
         hell = 0
@@ -56,19 +57,35 @@ def checker():
                 help = text[i + 1].lower()
             except IndexError:
                 help = ""
+            yoohoo = text[i].lower() + " " + help
             if (re.fullmatch(text[i].lower(), (dictionary[j])) and hell > 0) or \
-                    (re.fullmatch(text[i].lower() + help, dictionary[j]) and hell > 0):
+                    (re.fullmatch(yoohoo, dictionary[j]) and hell > 0):
                 flag = False
+                if re.fullmatch(yoohoo, dictionary[j]):
+                    flagS = True
         if flag:
-            print(hel[i], end=" ")
+            if flagS:
+                try:
+                    print(choose(text[i] + " " + text[i + 1], hel[i]), end=" ")
+                except IndexError:
+                    pass
+            else:
+                print(choose(text[i], hel[i]), end=" ")
             file.write(hel[i])
         elif get_len(counter, text[i]) <= 5:
-            print(choose(colored(text[i], "yellow"), hel[i], "yellow"), end=" ")
-            #file.write(f"*{hel[i]}*")
+            if flagS:
+                print(choose(colored(text[i] + " " + text[i + 1], "yellow"), hel[i], "yellow"), end=" ")
+            else:
+                print(choose(colored(text[i], "yellow"), hel[i], "yellow"), end=" ")
+            file.write(f"{hel[i]}")
         else:
-            print(choose(colored(text[i], "red"), hel[i], "red"), end=" ")
+            if flagS:
+                print(choose(colored(text[i] + " " + text[i + 1], "red"), hel[i], "red"), end=" ")
+            else:
+                print(choose(colored(text[i], "red"), hel[i], "red"), end=" ")
             file.write(hel[i])
         flag = True
+        flagS = False
     for i in range(len(dictionary)):
         try:
             result = f"{dictionary[i]}: {counter[dictionary[i]]} \n"
