@@ -128,6 +128,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Files
+#My own files
+ffmpeg.exe
+ffplay.exe
+ffprobe.exe
+voice
 input.txt
 output.txt
