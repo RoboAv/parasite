@@ -11,6 +11,13 @@ dictionary = ["как бы", "собственно", "таким образом"
 counter = {}
 
 
+def updateDict():
+    global dictionary
+    file = open("dictionary.txt", "r", encoding="utf-8")
+    dictionary = file.read().split(",")
+    print(dictionary)
+
+
 def getCounter():
     return counter
 
@@ -32,6 +39,7 @@ def choose(text, txt, color="white", int=0):
 
 
 def checker():
+    updateDict()
     counter.clear()
     file = open("input.txt", mode="r", encoding="utf-8")
     text = file.read()
